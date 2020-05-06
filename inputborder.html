@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+        }
+        h1{
+            margin: 200px 0 0 0;
+            text-align: center;
+            color: red;
+        }
+        #back{
+            margin:0 auto;
+            width: 300px;
+            /* border: 1px solid red; */
+            overflow: hidden;
+        }
+        #back input{
+            width: 100%;
+            padding: 5px 15px;
+            box-sizing: border-box;
+            border: 1px solid lightskyblue;
+        }
+        #list .single{
+            position: relative;
+            border-bottom: 1px solid rgb(207, 205, 67);
+        }
+        #list .single p{
+            width: 100%;
+            height: 30px;
+            margin: 0;
+            padding: 5px 15px;
+            line-height: 30px;
+        }
+        #list .single span{
+            width: 30px;
+            position: absolute;
+            right: 0;
+            top: 0;
+            text-align: center;
+            line-height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>todo</h1>
+    <div id="back">
+        <input id="inputid" type="text" value="">
+        <div id="list">
+
+        </div>
+    </div>
+    <script>
+        var inputid=document.getElementById("inputid");
+        var list=document.getElementById("list");
+        var all=document.getElementsByClassName('single'); 
+        inputid.onkeyup=function(){
+            if(event.code=="Enter"){
+                var newDiv=document.createElement('div');
+                var newp=document.createElement('p');
+                var newspan=document.createElement('span');
+                newDiv.appendChild(newp);
+                newDiv.appendChild(newspan);
+                newp.innerHTML=inputid.value;
+                newspan.innerHTML='&times;';
+                newDiv.className='single';
+                list.appendChild(newDiv);
+                inputid.value='';
+                newspan.onclick=function(){
+                    list.removeChild(this.parentNode);
+                }
+            }
+        }
+        //模糊匹配
+        function select(){
+            inputid.addEventListener('keyup',function(e){
+                // alert(e.target.value);
+                var content=e.target.value;
+                var reg=new RegExp('('+content+')','g');
+                for(var i=0;i<all.length;i++){
+                    var one=all[i].getElementsByTagName('p')[0];
+                    var newStr=one.innerText.replace(reg,'<font color=red>$1</font>');
+                    if(one.innerText.indexOf(content)==-1){
+                        all[i].style.display='none'
+                    }
+                    else{
+                        one.innerHTML=newStr;
+                    }
+                }
+                
+                if(content==''){
+                    // for( var i = 0; i<all.length; i++ ){
+                    //     all[i].style.display = 'block';//输入框空时全部显示
+                    // }
+                    
+                    all.forEach(element => {
+                        alert(typeof element);
+                        element.style.display='block'
+                    });
+                    // for (const key in object) {
+                    //     if (object.hasOwnProperty(key)) {
+                    //         const element = object[key];
+                            
+                    //     }
+                    // }
+                    // for (const iterator of object) {
+                        
+                    // }
+                }
+            })
+        }
+        select();
+    </script>
+</body>
+</html>

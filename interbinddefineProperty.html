@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <div>
+        <input type="text" id="in" placeholder="请输入值" onkeyup="fn1(event)" >
+    </div>
+    <p>
+        同步值是：<span id="reflect"></span>
+    </p>
+    <script>
+        var inpputcontent=document.getElementById("in")
+        var reflectcontent=document.getElementById("reflect")
+        var obj={}
+        Object.defineProperty(obj,'myname',{
+            set:function(val){
+                // inpputcontent.value=val
+                reflectcontent.innerText=val
+            },
+            get:function(){
+                return obj.myname
+            }
+        })
+        function fn1(event){
+            // alert(event.target.value)
+            obj.myname=event.target.value
+            // reflectcontent.innerText=event.target.value
+        }
+    </script>
+</body>
+</html>
