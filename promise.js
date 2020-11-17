@@ -45,3 +45,30 @@ console.log(2)
 // 卧槽成功返回一个promise
 // 第二个then失败数据failure
 // Promise { undefined }
+
+//=====================================================================
+var fetchData = function(callback) {
+    reqwest({
+        url: fakeDataUrl,
+        type: 'json',
+        method: 'get',
+        contentType: 'application/json',
+        // 相当于传进去一个回调函数
+        success: res => {          
+            callback(res);
+        },
+    });
+}
+
+var handleLoad = function() {
+    const data = this.data;
+    this.loading = true;
+    if (data.length > 14) {
+        this.loading = false;
+        return;
+    }
+    this.fetchData((response) => {
+        this.data = data.concat(response.data);
+        this.loading = false;
+    });
+}
