@@ -10,3 +10,4 @@ var obj1={
 
 var obj2=extend(true,{},obj1)
 console.log(obj1===obj2)
+//使用jquery深拷贝
