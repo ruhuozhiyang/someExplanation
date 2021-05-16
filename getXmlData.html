@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <a href="http://8.140.12.41/test.exe" download>下载</a>
+        <button onClick="getXmlData('http://localhost:8080/data.xml')">获取xml值</button>
+        <p>获取结果为（转为json）</p>
+        <textarea id="resultAsJson"></textarea>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    // let xmlDocLoad = document.implementation.createDocument('', '', null);
+    // let xmlDocLoad = loadXMLDoc('./data.xml');
+    // console.log(xmlDocLoad);
+    // let parser = new DOMParser();
+    // parser.parseFromString();
+
+    // function loadFile() {
+    //     const reader = new FileReader();
+    //     reader
+    // }
+
+    function loadXMLResource(filePath) {
+        window.location.href = filePath;
+    }
+
+    //将xml对象转为json的格式。
+    function getJson(node) {
+        // console.log(node); // typeof node: object
+        if (node.children.length === 0) {
+            return node.innerHTML;
+        }
+        let nodeJson = {};
+        for (let i = 0; i < node.children.length; i++) {
+            let child = node.children[i];
+            if (nodeJson[child.tagName] === undefined) {
+                nodeJson[child.tagName] = {};
+            }
+            nodeJson[child.tagName] = getJson(child);
+        }
+        return nodeJson;
+    }
+
+    function parseXmlToJson(xmlFile) {
+        // console.log(typeof xmlFile); //string
+        let domParser = new DOMParser();
+        let xmlDoc = domParser.parseFromString(xmlFile, 'text/xml');
+        // console.log(typeof xmlDoc); //Object
+        return getJson(xmlDoc);
+    }
+
+    //获取xml数据 以String的格式返回。
+    function loadXMLDoc(filePath, callback) {
+        let xhttp = '';
+        if (window.XMLHttpRequest) {
+            xhttp = new XMLHttpRequest();
+        }
+        else {
+            xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xhttp.open("GET", filePath, true);
+        xhttp.onload  = function() {
+            const allText = xhttp.response;
+            callback(allText)
+        }
+        xhttp.send();
+    }
+
+    function getXmlData(filePath) {
+        loadXMLDoc(filePath, (res) => {
+            let result = parseXmlToJson(res);
+            // console.log(result);
+            document.getElementById("resultAsJson").innerText = result;
+        });
+    }
+</script>
